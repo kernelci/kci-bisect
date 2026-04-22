@@ -8,6 +8,11 @@
 2. **Composable** — building blocks that can be assembled differently
 3. **Pluggable backends** — swap build/test/storage backends
 4. **Reproducible** — deterministic builds and tests across bisection steps
+5. **Reuse over reinvention** — wrap existing open-source tools
+   (TuxMake, TuxRun, LAVA, git-bisect, logspec, ...) behind the
+   component interfaces rather than reimplementing them. Define the
+   interface first so tool choice stays swappable; contribute upstream
+   over forking.
 
 ## Proposed Building Blocks
 
