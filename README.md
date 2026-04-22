@@ -53,7 +53,9 @@ Please drop them into `contrib/` with a short README describing
 what they do and how they work.
 
 See the [GitHub issues](../../issues) for the current roadmap and
-discussion topics.
+discussion topics. Design sketch in
+[docs/architecture.md](docs/architecture.md); unresolved design
+questions in [oq.md](oq.md).
 
 ## Licence
 
