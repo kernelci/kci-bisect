@@ -37,8 +37,22 @@ interfaces and boundaries are TBD.
 
 - **Test step** — runs a test against a built kernel
   - Backends: TuxRun (QEMU), LAVA (hardware), custom
-- **Result parser** — determines pass/fail from test output
+- **Result parser** — extracts structured signals from test output
+  (pass/fail flags, error signatures, measured metrics). Deterministic
+  extraction only; no verdict.
   - Integration: logspec for error signature matching
+
+### Decision Engine
+
+- **Decision Engine** — maps parsed signals to a bisection verdict:
+  `good` / `bad` / `skip` / `weak`. Separated from `Result parser` so that policy (thresholds, confidence, etc) can evolve independently of signal extraction.
+  - Strategies:
+    - **binary** — presence/absence of an error signature
+      (build, boot, config, unit-test failures)
+    - **threshold / statistical** — regression decision on a continuous
+      metric, possibly over multiple repetitions (performance)
+  - `skip` (cannot test at this commit, e.g. build broken pre-existing)
+    is distinct from `weak` (tested but evidence uncertain)
 
 ### Reporting
 
@@ -52,18 +66,26 @@ interfaces and boundaries are TBD.
 
 - **Verify step** — confirms the suspect commit by reverting and retesting
 
+### State
+
+- **State store** — persists bisection progress for auditability and
+  resumability. Data model:
+  - **Campaign** — one bisection investigation, bounded by a fixed
+    scope and known good/bad boundaries
+  - **Step** — one tested commit inside a campaign; records tested
+    commit, build and test evidence, decision
+    (`good` / `bad` / `skip` / `weak`), and rationale.
+  - Backends: local file (JSON, SQLite), KCIDB, custom
+
 ## Integration Points
 
 These are KernelCI-specific and should be separate from the generic core:
 
-- Maestro regression detection → bisection trigger
-- Maestro /api/checkout → build + test execution
-- KCIDB → historical result lookup
-- kci-dev CLI → developer-facing interface
+- [Maestro](https://docs.kernelci.org/components/maestro/) regression detection -> bisection trigger
+- Maestro /api/checkout -> build + test execution
+- KCIDB -> historical result lookup
+- kci-dev CLI-> developer-facing interface
 
 ## Open Questions
 
-- How to handle non-linear git history (merge commits)?
-- How to handle flaky/intermittent test failures?
-- What state needs to be persisted for resumable bisections?
-- Align with Guillaume's Renelec/Vixie framework?
+List of open questions is tracked in [../oq.md](../oq.md).
