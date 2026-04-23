@@ -1,0 +1,67 @@
+flowchart LR
+    subgraph trigger["Trigger"]
+        direction TB
+        manual["Manual CLI"]
+        maestro_trigger["Maestro\nRegression"]
+        kcidev["kci-dev\nbisect"]
+    end
+
+    subgraph core["Bisection Core"]
+        direction TB
+        loop["Orchestrator"]
+        selector["Commit Selector\n<i>midpoint / n-bisect</i>"]
+        statestore[("State Store\n<i>Campaign / Step</i>")]
+        loop <--> selector
+        loop <--> statestore
+    end
+
+    subgraph buildtest["Build & Test Pipeline"]
+        direction TB
+        build_cache{"Build Cache"}
+        build_step["Build Step"]
+        test_step["Test Step"]
+        build_cache -->|miss| build_step --> test_step
+        build_cache -->|hit| test_step
+    end
+
+    subgraph backends["Pluggable Backends"]
+        direction TB
+        subgraph bb["Build"]
+            tuxmake["TuxMake"]
+            maestro_build["Maestro"]
+            k8s["Kubernetes"]
+        end
+        subgraph tb["Test"]
+            tuxrun["TuxRun\nQEMU"]
+            lava["LAVA"]
+            fvp["FVP / AVH"]
+        end
+    end
+
+    subgraph analysis["Analysis"]
+        direction TB
+        parser["Result Parser\n<i>logspec</i>"]
+        decision["Decision Engine"]
+        parser --> decision
+        binary["Binary\n<i>pass/fail</i>"]
+        statistical["Statistical\n<i>metrics</i>"]
+        decision --> binary
+        decision --> statistical
+    end
+
+    subgraph post["Post-Bisection"]
+        direction TB
+        verify["Verify\n<i>revert + retest</i>"]
+        report["Report Generator"]
+        recipients["Recipient Finder\n<i>get_maintainers.pl</i>"]
+        sender["Report Sender\n<i>email / API</i>"]
+        verify --> report --> recipients --> sender
+    end
+
+    trigger --> loop
+    loop --> build_cache
+    build_step -.-> bb
+    test_step -.-> tb
+    test_step --> parser
+    analysis -->|"good / bad\nskip / weak"| loop
+    loop -->|"culprit found"| verify
