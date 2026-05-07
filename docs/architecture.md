@@ -42,10 +42,10 @@ interfaces and boundaries are TBD.
   extraction only; no verdict.
   - Integration: logspec for error signature matching
 
-### Decision Engine
+### Decision engine
 
-- **Decision Engine** — maps parsed signals to a bisection verdict:
-  `good` / `bad` / `skip` / `weak`. Separated from `Result parser` so that policy (thresholds, confidence, etc) can evolve independently of signal extraction.
+- **Decision engine** — maps parsed signals to a step decision:
+  `good` / `bad` / `skip` / `weak`. Separated from `Result parser` so that decision rules can evolve independently of signal extraction.
   - Strategies:
     - **binary** — presence/absence of an error signature
       (build, boot, config, unit-test failures)
@@ -56,7 +56,7 @@ interfaces and boundaries are TBD.
 
 ### Reporting
 
-- **Report generator** — produces bisection report (suspect commit,
+- **Report generator** — produces bisection report (culprit,
   verification result, bisection log)
 - **Recipient finder** — determines who to notify
   (get_maintainers.pl, commit trailers, Lore mbox lookup)
@@ -64,7 +64,7 @@ interfaces and boundaries are TBD.
 
 ### Verification
 
-- **Verify step** — confirms the suspect commit by reverting and retesting
+- **Verify step** — confirms the culprit by reverting and retesting
 
 ### State
 

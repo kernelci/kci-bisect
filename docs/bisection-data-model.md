@@ -42,13 +42,13 @@ could not be reproduced under the fixed campaign scope.
 
 The entry contains:
 
-- `Bisection-campaign record ID`: one regression-isolation workflow.
+- `Bisection-campaign record ID`: one bisection campaign.
 - `Evidence links`: the records that caused the bisection campaign to start.
 - `Campaign-scope fields`: the fixed dimensions for this campaign's failure type that must remain constant.
 - `Search-boundary fields`: the known-good boundary, the known-bad boundary, and the search method.
 - `Lifecycle fields`: the campaign status, start/end times, and the actor responsible for compaign.
 - `Final-outcome fields`: the final conclusion of the campaign, including the outcome category (single culprit
-    identified, narrowed range, unresolved, or original regression not confirmed), the culprit kernel reference
+    identified, narrowed range, unresolved, or not confirmed), the culprit kernel reference
     when a single kernel is identified, and the narrowed good and bad boundary references when the outcome 
     is a narrowed range.
 - `Bisection-step links`: the ordered tested steps that belong to that campaign.
