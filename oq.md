@@ -13,10 +13,7 @@ decision recorded in `docs/<file>` or be closed as out-of-scope.
 2. Shared Decision Engine interface for binary signals (build/boot/test failures)
   and continuous metrics (performance), or two strategies behind one interface?
 
-3. Keep `skip` and `weak` as distinct step outcomes, or collapse to `git bisect`'s single `skip`?
-   They drive different follow-ups: skip advances the search; weak suggests re-test.
-
-4. What counts as "triggering evidence" generically? A regression classification, a first-red build,
+3. What counts as "triggering evidence" generically? A regression classification, a first-red build,
    a user-filed bug?
 
 ## Git & Commit Selection
